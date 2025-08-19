@@ -1,0 +1,1 @@
+int utf8_password_to_pdfdoc( jbyte* bb, const char* ss, int ss_size, bool encrypt_b );

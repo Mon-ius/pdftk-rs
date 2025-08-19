@@ -1,0 +1,168 @@
+class TK_Session {
+	bool m_valid_b;
+	bool m_authorized_b;
+	bool m_input_pdf_readers_opened_b;
+	bool m_verbose_reporting_b;
+	bool m_ask_about_warnings_b;
+public:
+  typedef unsigned long PageNumber;
+	typedef enum { NORTH= 0, EAST= 90, SOUTH= 180, WEST= 270 } PageRotate;
+	typedef bool PageRotateAbsolute;
+	struct InputPdf {
+		string m_filename;
+		string m_password;
+		bool m_authorized_b;
+		vector< pair< set<jint>, itext::PdfReader* > > m_readers;
+		PageNumber m_num_pages;
+		InputPdf() : m_filename(), m_password(), m_authorized_b(true), m_readers(), m_num_pages(0) {}
+	};
+	vector< InputPdf > m_input_pdf;
+	typedef vector< InputPdf >::size_type InputPdfIndex;
+	map< string, InputPdfIndex > m_input_pdf_index;
+	bool add_reader( InputPdf* input_pdf_p, bool keep_artifacts_b );
+	bool open_input_pdf_readers();
+	vector< string > m_input_attach_file_filename;
+	jint m_input_attach_file_pagenum;
+	string m_update_info_filename;
+	bool m_update_info_utf8_b;
+	string m_update_xmp_filename;
+  enum keyword {
+    none_k= 0,
+    cat_k,
+		shuffle_k,
+		burst_k,
+		barcode_burst_k,
+		filter_k,
+		dump_data_k,
+		dump_data_utf8_k,
+		dump_data_fields_k,
+		dump_data_fields_utf8_k,
+		dump_data_annots_k,
+		generate_fdf_k,
+		unpack_files_k,
+		first_operation_k= cat_k,
+    final_operation_k= unpack_files_k,
+		fill_form_k,
+		attach_file_k,
+		update_info_k,
+		update_info_utf8_k,
+		update_xmp_k,
+		background_k,
+		multibackground_k,
+		stamp_k,
+		multistamp_k,
+		rotate_k,
+		attach_file_to_page_k,
+    end_k,
+    even_k,
+    odd_k,
+    output_k,
+		input_pw_k,
+		owner_pw_k,
+		user_pw_k,
+		user_perms_k,
+		encrypt_40bit_k,
+		encrypt_128bit_k,
+		perm_printing_k,
+		perm_modify_contents_k,
+		perm_copy_contents_k,
+		perm_modify_annotations_k,
+		perm_fillin_k,
+		perm_screen_readers_k,
+		perm_assembly_k,
+		perm_degraded_printing_k,
+		perm_all_k,
+		filt_uncompress_k,
+		filt_compress_k,
+		flatten_k,
+		need_appearances_k,
+		drop_xfa_k,
+		drop_xmp_k,
+		keep_first_id_k,
+		keep_final_id_k,
+		verbose_k,
+		dont_ask_k,
+		do_ask_k,
+		rot_north_k,
+		rot_east_k,
+		rot_south_k,
+		rot_west_k,
+		rot_left_k,
+		rot_right_k,
+		rot_upside_down_k
+  };
+  static keyword is_keyword( char* ss, int* keyword_len_p );
+  keyword m_operation;
+  struct PageRef {
+		InputPdfIndex m_input_pdf_index;
+    PageNumber m_page_num;
+    PageRotate m_page_rot;
+    PageRotateAbsolute m_page_abs;
+		PageRef( InputPdfIndex input_pdf_index, PageNumber page_num, PageRotate page_rot= NORTH, PageRotateAbsolute page_abs= false ) :
+			m_input_pdf_index( input_pdf_index ),
+			m_page_num( page_num ),
+			m_page_rot( page_rot ),
+			m_page_abs( page_abs ) {}
+  };
+  vector< vector< PageRef > > m_page_seq;
+	string m_form_data_filename;
+	string m_background_filename;
+	string m_stamp_filename;
+  string m_output_filename;
+	bool m_output_utf8_b;
+	string m_output_owner_pw;
+	string m_output_user_pw;
+	jint m_output_user_perms;
+	bool m_multistamp_b;
+	bool m_multibackground_b;
+	bool m_output_uncompress_b;
+	bool m_output_compress_b;
+	bool m_output_flatten_b;
+	bool m_output_need_appearances_b;
+	bool m_output_drop_xfa_b;
+	bool m_output_drop_xmp_b;
+	bool m_output_keep_first_id_b;
+	bool m_output_keep_final_id_b;
+	bool m_cat_full_pdfs_b;
+	enum encryption_strength {
+		none_enc= 0,
+		bits40_enc,
+		bits128_enc
+	} m_output_encryption_strength;
+  TK_Session( int argc,
+							char** argv );
+	~TK_Session();
+  bool is_valid() const;
+	void dump_session_data() const;
+	void attach_files
+	( itext::PdfReader* input_reader_p,
+		itext::PdfWriter* writer_p );
+	void unpack_files
+	( itext::PdfReader* input_reader_p );
+	int create_output_page( itext::PdfCopy*, PageRef, int );
+	int create_output();
+private:
+	enum ArgState {
+    input_files_e,
+		input_pw_e,
+    page_seq_e,
+		form_data_filename_e,
+		attach_file_filename_e,
+		attach_file_pagenum_e,
+		update_info_filename_e,
+		update_xmp_filename_e,
+		output_e,
+    output_filename_e,
+		output_args_e,
+		output_owner_pw_e,
+		output_user_pw_e,
+		output_user_perms_e,
+		background_filename_e,
+		stamp_filename_e,
+		done_e
+	};
+	bool handle_some_output_options( TK_Session::keyword kw, ArgState* arg_state_p );
+};
+void
+prompt_for_filename( const string fn_name,
+										 string& fn );

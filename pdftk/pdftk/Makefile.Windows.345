@@ -1,0 +1,19 @@
+export USE_LIBGCJ_SUPPLEMENT= 1
+TOOLPATH= /c/mingw-3.4.5/bin/
+export VERSUFF=
+export CPP= $(TOOLPATH)cpp$(VERSUFF)
+export CXX= $(TOOLPATH)g++$(VERSUFF)
+export GCJ= $(TOOLPATH)gcj$(VERSUFF)
+export GCJH= $(TOOLPATH)gcjh$(VERSUFF)
+export GJAR= $(TOOLPATH)jar$(VERSUFF)
+export LIBGCJ= /c/mingw-3.4.5/share/java/libgcj-3.4.5.jar
+export AR= ar
+export RM= rm
+export ARFLAGS= rs
+export RMFLAGS= -vf
+export CPPFLAGS= -DPATH_DELIM=0x5c -DASK_ABOUT_WARNINGS=false \
+	-D_UNICODE -DUNICODE -D__USE_MINGW_ACCESS
+export CXXFLAGS= -Wall -Wextra -O2 -fdollars-in-identifiers -mthreads
+export GCJFLAGS= -O2
+export LDLIBS= c:/mingw-3.4.5/lib/crt2.o -nostdlib -lgcj -lws2_32 -liconv -luser32 -ladvapi32 -lmingw32 -lstdc++ -lgcc -lmoldname -lmingwex -lkernel32 -lmsvcrt -lshell32
+include Makefile.Base

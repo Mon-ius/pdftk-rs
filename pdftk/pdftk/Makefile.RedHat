@@ -1,0 +1,17 @@
+TOOLPATH=
+export VERSUFF=
+export CXX= $(TOOLPATH)g++$(VERSUFF)
+export GCJ= $(TOOLPATH)gcj$(VERSUFF)
+export GCJH= $(TOOLPATH)gcjh$(VERSUFF)
+export GJAR= $(TOOLPATH)fastjar$(VERSUFF)
+export LIBGCJ= /usr/share/java/libgcj$(VERSUFF).jar
+export AR= ar
+export RM= rm
+export ARFLAGS= rs
+export RMFLAGS= -vf
+export CPPFLAGS= -DPATH_DELIM=0x2f -DASK_ABOUT_WARNINGS=false -DUNBLOCK_SIGNALS -fdollars-in-identifiers
+export CXXFLAGS= -Wall -Wextra -Weffc++ -O2
+export GCJFLAGS= -Wall -Wextra -O2
+export GCJHFLAGS= -force
+export LDLIBS= -lgcj
+include Makefile.Base
